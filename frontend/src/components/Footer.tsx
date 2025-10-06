@@ -46,10 +46,9 @@ export const Footer = () => {
           <div>
             <h4 className="font-semibold mb-4">Contact</h4>
             <ul className="space-y-2 text-sm text-muted-foreground">
-              <li>Email: hello@automateai.com</li>
-              <li>Phone: +1 (555) 123-4567</li>
-              <li>Address: 123 AI Street</li>
-              <li>San Francisco, CA 94102</li>
+              <li>Email: iunitedx@gmail.com</li>
+              <li>Phone: 7289069525 </li>
+              <li>Location : Delhi </li>
             </ul>
           </div>
         </div>

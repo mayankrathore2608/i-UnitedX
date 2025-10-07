@@ -16,35 +16,56 @@ export const BookCall = () => {
     message: "",
   });
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
-    // This will be connected to a calendar booking system
-    console.log("Booking call with:", formData);
-    
-    toast({
-      title: "Call Scheduled!",
-      description: "We'll contact you shortly to confirm your appointment.",
-    });
+    console.log("Submitting form:", formData);
 
-    // Reset form
-    setFormData({
-      name: "",
-      email: "",
-      phone: "",
-      company: "",
-      message: "",
-    });
+    try {
+      const response = await fetch("https://n8n-0bk9.onrender.com/webhook/1ac6031b-ad21-46ac-aaa8-12cfb82e581e", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
+      });
+      console.log("Response status:", response.status);
+
+      if (!response.ok) {
+        throw new Error("Failed to schedule call");
+      }
+
+      const result = await response.json();
+      console.log("API Response:", result);
+
+      toast({
+        title: "Call Scheduled!",
+        description: "We'll contact you shortly to confirm your appointment.",
+      });
+
+      setFormData({
+        name: "",
+        email: "",
+        phone: "",
+        company: "",
+        message: "",
+      });
+    } catch (error) {
+      console.error("Error:", error);
+      toast({
+        title: "Error",
+        description: "Something went wrong. Please try again later.",
+        variant: "destructive",
+      });
+    }
   };
 
   return (
     <section id="book-call" className="py-24 relative overflow-hidden">
-      {/* Floating Background Elements */}
       <div className="absolute inset-0 pointer-events-none">
         <div className="absolute top-20 left-1/4 w-80 h-80 bg-primary/15 rounded-full blur-3xl drift-animation" />
         <div className="absolute bottom-20 right-1/4 w-72 h-72 bg-secondary/15 rounded-full blur-3xl float-slow" />
       </div>
-      
+
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <div className="max-w-4xl mx-auto">
           <div className="text-center space-y-4 mb-12">
@@ -57,9 +78,8 @@ export const BookCall = () => {
           </div>
 
           <Card className="group border-border/50 bg-card/50 backdrop-blur-sm hover:shadow-[0_20px_60px_rgba(139,92,246,0.3)] transition-all duration-500 hover:-translate-y-1 relative overflow-hidden">
-            {/* Floating Glow */}
             <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-secondary/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-            
+
             <CardHeader className="relative z-10">
               <CardTitle className="flex items-center gap-2">
                 <Calendar className="w-5 h-5 text-primary" />
@@ -69,6 +89,7 @@ export const BookCall = () => {
                 Fill out the form below and we'll get back to you within 24 hours
               </CardDescription>
             </CardHeader>
+
             <CardContent className="relative z-10">
               <form onSubmit={handleSubmit} className="space-y-6">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -132,7 +153,11 @@ export const BookCall = () => {
                   />
                 </div>
 
-                <Button type="submit" size="lg" className="w-full glow-effect hover:scale-105 transition-transform">
+                <Button
+                  type="submit"
+                  size="lg"
+                  className="w-full glow-effect hover:scale-105 transition-transform"
+                >
                   Schedule My Free Consultation
                 </Button>
               </form>
